@@ -1,19 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
-import { AuthService } from './auth.service';
-import { AuthDTO } from './dto/authDto';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UserService } from 'src/user/user.service';
+import { AuthDTO } from './dto/authDto';
 
 @Controller('auth')
 export class AuthController {

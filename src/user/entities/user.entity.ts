@@ -31,8 +31,8 @@ export class UserEntity {
   @DeleteDateColumn()
   deleted_at: Date;
 
-  @BeforeInsert()
-  private beforeInsert() {
-    this.password = bcrypt.hashSync(this.password, 10);
-  }
+  //   @BeforeInsert()
+  //   private beforeInsert() {
+  //     this.password = bcrypt.hashSync(this.password, 10);
+  //   }
 }
