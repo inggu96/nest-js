@@ -1,12 +1,10 @@
-import { Module } from '@nestjs/common';
-import { BooksService } from './books.service';
-import { BooksController } from './books.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BookEntity } from './entities/book.entity';
+// import { Module } from '@nestjs/common';
+// import { PrismaService } from 'src/database/prisma.service';
+// import { BooksController } from './books.controller';
+// import { BooksService } from './books.service';
 
-@Module({
-  imports: [TypeOrmModule.forFeature([BookEntity])],
-  controllers: [BooksController],
-  providers: [BooksService],
-})
-export class BooksModule {}
+// @Module({
+//   controllers: [BooksController],
+//   providers: [BooksService, PrismaService],
+// })
+// export class BooksModule {}

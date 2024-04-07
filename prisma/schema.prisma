@@ -14,3 +14,18 @@ model User {
     author  String
     name String
   }
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  author    String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+}
+
+model Phone {
+    id Int @id  @default(autoincrement())
+    number String
+    type String
+}

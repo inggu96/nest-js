@@ -1,36 +1,38 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
-import { BookEntity } from './entities/book.entity';
+// import { Injectable } from '@nestjs/common';
+// import { Book, Prisma } from '@prisma/client';
 
-@Injectable()
-export class BooksService {
-  constructor(
-    @InjectRepository(BookEntity)
-    private booksRepository: Repository<BookEntity>,
-  ) {}
-  async create(book: BookEntity): Promise<BookEntity> {
-    const newBook = this.booksRepository.create(book);
-    return await this.booksRepository.save(newBook);
-  }
-  async findAll(): Promise<BookEntity[]> {
-    return this.booksRepository.find();
-  }
-  async findOne(id: number): Promise<BookEntity> {
-    return await this.booksRepository.findOne({
-      where: {
-        id,
-      },
-    });
-  }
-  async update(id: number, book: BookEntity): Promise<number> {
-    await this.booksRepository.update(id, book);
-    return id;
-  }
-  async remove(id: number): Promise<number> {
-    await this.booksRepository.delete(id);
-    return id;
-  }
-}
+// import { PrismaService } from 'src/database/prisma.service';
+
+// @Injectable()
+// export class BooksService {
+//   constructor(private prisma: PrismaService) {}
+
+//   async create(book: Prisma.BookCreateInput): Promise<Book> {
+//     return this.prisma.book.create({
+//       data: book,
+//     });
+//   }
+
+//   async findAll(): Promise<Book[]> {
+//     return this.prisma.book.findMany();
+//   }
+
+//   async findOne(id: number): Promise<Book | null> {
+//     return this.prisma.book.findUnique({
+//       where: { id },
+//     });
+//   }
+
+//   async update(id: number, book: Prisma.BookUpdateInput): Promise<Book> {
+//     return this.prisma.book.update({
+//       where: { id },
+//       data: book,
+//     });
+//   }
+
+//   async remove(id: number): Promise<void> {
+//     await this.prisma.book.delete({
+//       where: { id },
+//     });
+//   }
+// }
