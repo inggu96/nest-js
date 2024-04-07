@@ -16,6 +16,13 @@ export class UserDTO {
     description: '사용자의 이메일 주소',
   })
   email: string;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+    example: 'dlsrnr55',
+    description: '사용자의 비밀번호',
+  })
+  password: string;
 
   @ApiProperty({
     type: 'string',
@@ -31,12 +38,4 @@ export class UserDTO {
     description: '사용자 닉네임',
   })
   nickname: string;
-
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-    example: 'dlsrnr55',
-    description: '사용자의 비밀번호',
-  })
-  password: string;
 }

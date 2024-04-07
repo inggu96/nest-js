@@ -21,6 +21,6 @@ export class AuthController {
     description: '회원가입 성공',
   })
   async register(@Body() props: RegisterDTO) {
-    return this.authService.register(props, 'USER');
+    return this.authService.register(props);
   }
 }

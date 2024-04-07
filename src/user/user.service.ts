@@ -1,26 +1,12 @@
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { UserDTO } from './dto/user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  private readonly users: UserDTO[] = [
-    {
-      name: 'inguk',
-      email: 'user1@example.com',
-      birth: '1996.08.24',
-      nickname: 'inguk',
-      password: 'inguk',
-    },
-    {
-      name: 'inguk2',
-      email: 'user2@example.com',
-      birth: '1996.08.24',
-      nickname: 'inguk2',
-      password: 'inguk2',
-    },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<UserDTO[]> {
-    return this.users;
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 }
