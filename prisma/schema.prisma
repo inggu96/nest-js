@@ -9,12 +9,6 @@ datasource db {
   url      = env("DB_URL")
 }
 
-model User {
-    id    Int     @id @default(autoincrement())
-    author  String
-    name String
-  }
-
 model Book {
   id        Int      @id @default(autoincrement())
   author    String
@@ -28,4 +22,33 @@ model Phone {
     id Int @id  @default(autoincrement())
     number String
     type String
+}
+
+model User{ 
+  id Int @id  @default(autoincrement())
+  name      String?
+  email     String?   @unique
+  birth     String?
+  nickname  String?
+  password  String?
+  gender UserGender? 
+  userType  UserType? @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserType{
+  ADMIN
+  USER
+}
+
+enum ReportType{
+  PENDING
+  IGNORE
+  USER_DELETE
+}
+
+enum UserGender{
+  MALE
+  FEMALE
 }

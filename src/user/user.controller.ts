@@ -1,32 +1,19 @@
-import { Body, ConflictException, Controller, Get, Post } from '@nestjs/common';
-import { AuthDTO } from 'src/auth/dto/authDto';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly users: UserService) {}
 
   @Get()
-  async findAll() {
-    return await this.userService.findAll();
-  }
-
-  @Post('/signup')
-  async signup(@Body() authDTO: AuthDTO.SignUp) {
-    const { email, nickname } = authDTO;
-
-    const hasEmail = await this.userService.findByEmail(email);
-    if (hasEmail) {
-      throw new ConflictException('이미 사용중인 이메일입니다.');
-    }
-
-    const hasNickname = await this.userService.findByNickname(nickname);
-    if (hasNickname) {
-      throw new ConflictException('이미 사용중인 닉네임입니다.');
-    }
-
-    const userEntity = await this.userService.signup(authDTO);
-
-    return '회원가입성공';
+  @ApiOperation({
+    summary: '[서비스] 유저 조회',
+    description: '유저의를 조회합니다.',
+  })
+  async findAll(): Promise<UserDTO[]> {
+    return this.users.findAll();
   }
 }
