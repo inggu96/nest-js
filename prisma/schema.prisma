@@ -33,6 +33,31 @@ model User{
   nickname  String?
 }
 
+model Movie {
+  id                 Int      @id
+  adult              Boolean
+  backdropPath       String?  @map("backdrop_path")
+  genres             Genre[]  @relation("MovieToGenre")
+  originalLanguage   String   @map("original_language")
+  originalTitle      String   @map("original_title")
+  overview           String
+  popularity         Float
+  posterPath         String   @map("poster_path")
+  releaseDate        DateTime @map("release_date")
+  title              String
+  video              Boolean
+  voteAverage        Float    @map("vote_average")
+  voteCount          Int      @map("vote_count")
+
+  @@map("movies")
+}
+
+model Genre {
+  id     Int    @id
+  name   String
+  movies Movie[] @relation("MovieToGenre")
+}
+
 enum UserType{
   ADMIN
   USER
