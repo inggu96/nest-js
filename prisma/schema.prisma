@@ -34,13 +34,13 @@ model User{
 }
 
 model Movie {
-  id                 Int      @id
+  id                 Int      @id  @default(autoincrement())
+  tmdbId             Int      @unique
   adult              Boolean
   backdropPath       String?  @map("backdrop_path")
-  genres             Genre[]  @relation("MovieToGenre")
   originalLanguage   String   @map("original_language")
   originalTitle      String   @map("original_title")
-  overview           String
+  overview           String? @db.LongText
   popularity         Float
   posterPath         String   @map("poster_path")
   releaseDate        DateTime @map("release_date")
@@ -48,14 +48,24 @@ model Movie {
   video              Boolean
   voteAverage        Float    @map("vote_average")
   voteCount          Int      @map("vote_count")
+  movies             MovieToGenre[]
 
   @@map("movies")
 }
 
 model Genre {
-  id     Int    @id
-  name   String
-  movies Movie[] @relation("MovieToGenre")
+  id                 Int    @id @default(autoincrement())
+  name               String
+  movies             MovieToGenre[]
+}
+
+model MovieToGenre {
+  movieId            Int
+  genreId            Int
+  movie              Movie          @relation(fields: [movieId],references: [id])
+  genre              Genre          @relation(fields: [genreId],references: [id])
+
+  @@id([movieId,genreId])
 }
 
 enum UserType{

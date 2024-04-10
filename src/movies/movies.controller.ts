@@ -6,7 +6,7 @@ export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Get()
-  getMovies() {
+  async getMovies() {
     return this.moviesService.fetchMovies();
   }
 }

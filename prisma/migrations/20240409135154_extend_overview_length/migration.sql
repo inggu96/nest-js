@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `movies` MODIFY `overview` LONGTEXT NULL;
+ALTER TABLE `movies` ADD COLUMN `tmdbId` INT NOT NULL DEFAULT 0;
