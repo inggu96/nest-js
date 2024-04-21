@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,76 +8,61 @@ datasource db {
 }
 
 model Book {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   author    String
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 }
 
 model Phone {
-    id Int @id  @default(autoincrement())
-    number String
-    type String
+  id     Int    @id @default(autoincrement())
+  number String
+  type   String
 }
 
-model User{ 
-  id Int @id  @default(autoincrement())
-  name      String?
-  email     String?   @unique
-  password  String?
-  birth     String?
-  nickname  String?
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  birth    String?
+  email    String? @unique
+  nickname String?
+  password String?
 }
 
 model Movie {
-  id                 Int      @id  @default(autoincrement())
-  tmdbId             Int      @unique
-  adult              Boolean
-  backdropPath       String?  @map("backdrop_path")
-  originalLanguage   String   @map("original_language")
-  originalTitle      String   @map("original_title")
-  overview           String? @db.LongText
-  popularity         Float
-  posterPath         String   @map("poster_path")
-  releaseDate        DateTime @map("release_date")
-  title              String
-  video              Boolean
-  voteAverage        Float    @map("vote_average")
-  voteCount          Int      @map("vote_count")
-  movies             MovieToGenre[]
+  id               Int            @id @default(autoincrement())
+  adult            Boolean
+  backdropPath     String?        @map("backdrop_path")
+  originalLanguage String         @map("original_language")
+  originalTitle    String         @map("original_title")
+  overview         String?        @db.LongText
+  popularity       Float
+  posterPath       String?        @map("poster_path")
+  releaseDate      DateTime       @map("release_date")
+  title            String
+  video            Boolean
+  voteAverage      Float          @map("vote_average")
+  voteCount        Int            @map("vote_count")
+  tmdbId           Int            @unique
+  movies           MovieToGenre[]
 
   @@map("movies")
 }
 
 model Genre {
-  id                 Int    @id @default(autoincrement())
-  name               String
-  movies             MovieToGenre[]
+  id     Int            @id @default(autoincrement())
+  name   String
+  movies MovieToGenre[]
 }
 
 model MovieToGenre {
-  movieId            Int
-  genreId            Int
-  movie              Movie          @relation(fields: [movieId],references: [id])
-  genre              Genre          @relation(fields: [genreId],references: [id])
+  movieId Int
+  genreId Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+  movie   Movie @relation(fields: [movieId], references: [id])
 
-  @@id([movieId,genreId])
-}
-
-enum UserType{
-  ADMIN
-  USER
-}
-
-enum ReportType{
-  PENDING
-  IGNORE
-  USER_DELETE
-}
-
-enum UserGender{
-  MALE
-  FEMALE
+  @@id([movieId, genreId])
+  @@index([genreId], map: "MovieToGenre_genreId_fkey")
 }
