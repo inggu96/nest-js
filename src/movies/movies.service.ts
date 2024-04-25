@@ -1,5 +1,5 @@
 import { PrismaService } from '@/database/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 //https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&include_adult=false&include_video=false&language=ko-KR&page=1&sort_by=popularity.desc&without_genres=12`;
 @Injectable()
@@ -58,7 +58,6 @@ export class MoviesService {
             voteCount: movie.vote_count,
           },
         });
-
         // for (const genreId of movie.genre_ids) {
         //   await this.prisma.movieToGenre.upsert({
         //     where: {
@@ -96,6 +95,18 @@ export class MoviesService {
       console.error(`Failed to fetch movies: ${error.message}`);
       throw new Error('Failed to fetch movies');
     }
+  }
+
+  async findMovie(id: string) {
+    const movie = await this.prisma.movie.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID ${id} not found`);
+    }
+
+    return movie;
   }
 
   async fetchMoviesByGenre(page: number, genreIds: string) {
