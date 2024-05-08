@@ -6,107 +6,8 @@ import axios from 'axios';
 export class MoviesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async fetchAllMovies() {
-    const apiKey = 'd537b524395581a7f83c3b38b3452924';
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR`;
-    const fetchedMovies = [];
-    const baseUrlForImages = 'https://image.tmdb.org/t/p/w500';
-
-    try {
-      const response = await axios.get(url);
-      const movies = response.data.results;
-
-      for (const movie of movies) {
-        const backdropPath = movie.backdrop_path
-          ? `${baseUrlForImages}${movie.backdrop_path}`
-          : null;
-        const posterPath = movie.poster_path
-          ? `${baseUrlForImages}${movie.poster_path}`
-          : null;
-
-        const createdMovie = await this.prisma.movie.upsert({
-          where: {
-            tmdbId: movie.id,
-          },
-          update: {
-            adult: movie.adult,
-            backdropPath: backdropPath,
-            originalLanguage: movie.original_language,
-            originalTitle: movie.original_title,
-            overview: movie.overview,
-            popularity: movie.popularity,
-            posterPath: posterPath,
-            releaseDate: new Date(movie.release_date),
-            title: movie.title,
-            video: movie.video,
-            voteAverage: movie.vote_average,
-            voteCount: movie.vote_count,
-          },
-          create: {
-            tmdbId: movie.id,
-            adult: movie.adult,
-            backdropPath: backdropPath,
-            originalLanguage: movie.original_language,
-            originalTitle: movie.original_title,
-            overview: movie.overview,
-            popularity: movie.popularity,
-            posterPath: posterPath,
-            releaseDate: new Date(movie.release_date),
-            title: movie.title,
-            video: movie.video,
-            voteAverage: movie.vote_average,
-            voteCount: movie.vote_count,
-          },
-        });
-        // for (const genreId of movie.genre_ids) {
-        //   await this.prisma.movieToGenre.upsert({
-        //     where: {
-        //       movieId_genreId: {
-        //         movieId: movie.id,
-        //         genreId,
-        //       },
-        //     },
-        //     update: {},
-        //     create: {
-        //       movie: {
-        //         connect: { id: movie.id },
-        //       },
-        //       genre: {
-        //         connectOrCreate: {
-        //           where: { id: genreId },
-        //           create: { id: genreId, name: 'Unknown' },
-        //         },
-        //       },
-        //     },
-        //   });
-        // }
-
-        fetchedMovies.push({
-          ...createdMovie,
-          //   backdropImage: createdMovie.backdropImage,
-          //   posterImage: createdMovie.posterImage,
-          releaseDate: new Date(movie.release_date).toISOString(),
-        });
-        // console.log('createdMovie', createdMovie);
-      }
-
-      return fetchedMovies;
-    } catch (error) {
-      console.error(`Failed to fetch movies: ${error.message}`);
-      throw new Error('Failed to fetch movies');
-    }
-  }
-
-  async findMovie(id: string) {
-    const movie = await this.prisma.movie.findUnique({
-      where: { id: Number(id) },
-    });
-
-    if (!movie) {
-      throw new NotFoundException(`Movie with ID ${id} not found`);
-    }
-
-    return movie;
+  async getMovies() {
+    return this.prisma.movie.findMany();
   }
 
   async fetchMoviesByGenre(page: number, genreIds: string) {
@@ -147,5 +48,16 @@ export class MoviesService {
       console.error('Failed to fetch genre movies:', error.message);
       throw new Error('Failed to fetch genre movies');
     }
+  }
+  async findMovie(id: string) {
+    const movie = await this.prisma.movie.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID ${id} not found`);
+    }
+
+    return movie;
   }
 }
