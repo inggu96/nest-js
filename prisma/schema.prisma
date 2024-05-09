@@ -33,36 +33,94 @@ model User {
 
 model Movie {
   id               Int            @id @default(autoincrement())
-  adult            Boolean
+  adult            Boolean?
   backdropPath     String?        @map("backdrop_path")
   originalLanguage String         @map("original_language")
   originalTitle    String         @map("original_title")
   overview         String?        @db.LongText
-  popularity       Float
+  popularity       Float?
   posterPath       String?        @map("poster_path")
   releaseDate      DateTime       @map("release_date")
   title            String
-  video            Boolean
-  voteAverage      Float          @map("vote_average")
-  voteCount        Int            @map("vote_count")
+  video            Boolean?
+  voteAverage      Float?          @map("vote_average")
+  voteCount        Int?            @map("vote_count")
   tmdbId           Int            @unique
-  movies           MovieToGenre[]
+  genres              Genre[]             @relation("MovieGenres")
+  actors              Actor[]             @relation("MovieActors")
+  staffs              Staff[]             @relation("MovieStaffs")
+  productionCompanies ProductionCompany[] @relation("MovieProductionCompanies")
+  movieGenres          MovieGenres[]
+  movieActors         MovieActors[]
+  movieStaffs         MovieStaffs[]
+  movieProductionCompanies MovieProductionCompanies[]
 
   @@map("movies")
 }
 
 model Genre {
-  id     Int            @id @default(autoincrement())
+  id     Int     @id @default(autoincrement())
   name   String
-  movies MovieToGenre[]
+  movies Movie[] @relation("MovieGenres")
+  movieGenres MovieGenres[]
 }
 
-model MovieToGenre {
-  movieId Int
-  genreId Int
-  genre   Genre @relation(fields: [genreId], references: [id])
+model ProductionCompany {
+  id            Int    @id @default(autoincrement())
+  name          String
+  logoPath      String? @map("logo_path")
+  originCountry String  @map("origin_country")
+  movies        Movie[] @relation("MovieProductionCompanies")
+  movieProductionCompanies MovieProductionCompanies[]
+}
+
+model Actor {
+  id       Int       @id @default(autoincrement())
+  name     String
+  movies   Movie[]   @relation("MovieActors")
+  movieActors MovieActors[]
+}
+
+model Staff {
+  id       Int       @id @default(autoincrement())
+  name     String
+  role     String
+  movies   Movie[]   @relation("MovieStaffs")
+  movieStaffs MovieStaffs[]
+}
+
+model MovieGenres {
   movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+  genreId Int
 
   @@id([movieId, genreId])
-  @@index([genreId], map: "MovieToGenre_genreId_fkey")
+}
+
+model MovieProductionCompanies {
+  movie               Movie @relation(fields: [movieId], references: [id])
+  movieId             Int
+  productionCompany   ProductionCompany @relation(fields: [productionCompanyId], references: [id])
+  productionCompanyId Int
+
+  @@id([movieId, productionCompanyId])
+}
+model MovieActors {
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
+  actor   Actor @relation(fields: [actorId], references: [id])
+  actorId Int
+
+  @@id([movieId, actorId])
+}
+
+model MovieStaffs {
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
+  staff   Staff @relation(fields: [staffId], references: [id])
+  staffId Int
+  role    String
+
+  @@id([movieId, staffId, role])
 }

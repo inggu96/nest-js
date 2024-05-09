@@ -1,15 +1,17 @@
 import { PrismaService } from '@/database/prisma.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
+import { movieIncludeOption } from './query';
 //https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&include_adult=false&include_video=false&language=ko-KR&page=1&sort_by=popularity.desc&without_genres=12`;
 @Injectable()
 export class MoviesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getMovies() {
-    return this.prisma.movie.findMany();
+    return this.prisma.movie.findMany({
+      include: movieIncludeOption,
+    });
   }
-
   async fetchMoviesByGenre(page: number, genreIds: string) {
     const genreMapping = {
       'fc84777a-d713-4539-a5b9-8c24f0c85b99': 10749,
@@ -52,6 +54,7 @@ export class MoviesService {
   async findMovie(id: string) {
     const movie = await this.prisma.movie.findUnique({
       where: { id: Number(id) },
+      include: movieIncludeOption,
     });
 
     if (!movie) {
