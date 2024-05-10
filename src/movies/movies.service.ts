@@ -10,6 +10,10 @@ export class MoviesService {
   async getMovies() {
     return this.prisma.movie.findMany({
       include: movieIncludeOption,
+      orderBy: {
+        popularity: 'desc',
+      },
+      take: 10,
     });
   }
   async fetchMoviesByGenre(page: number, genreIds: string) {
