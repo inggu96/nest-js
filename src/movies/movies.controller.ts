@@ -12,11 +12,8 @@ export class MoviesController {
   }
 
   @Get('genre')
-  getMoviesByGenre(
-    @Query('genreIds') genreIds: string,
-    @Query('page') page: number = 1,
-  ) {
-    return this.moviesService.fetchMoviesByGenre(page, genreIds);
+  getMoviesByGenre(@Query('genreIds') genreIds: string) {
+    return this.moviesService.fetchMoviesByGenre(genreIds);
   }
   @Get(':id')
   async getMovie(@Param('id') id: string) {
