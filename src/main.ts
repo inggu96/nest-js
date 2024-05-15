@@ -16,6 +16,15 @@ async function bootstrap() {
     .setDescription('The phone API description')
     .setVersion('1.0')
     .addTag('phone')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        name: 'JWT',
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);
