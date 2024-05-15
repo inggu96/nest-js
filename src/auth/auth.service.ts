@@ -10,18 +10,27 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  //검증코드
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-    if (user && user.password === pass) {
+    if (user && user.password === password) {
       const { password, ...result } = user;
       return result;
     }
     return null;
   }
 
+  async validateUserById(userId: number): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (user) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
   async login(user: any) {
     const accessPayload = { email: user.email, sub: user.id };
     const refreshPayload = {

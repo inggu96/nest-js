@@ -11,15 +11,16 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  async findById(userId: number): Promise<UserDTO> {
+  async findById(userId) {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-
     if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new Error(`No user found with ID ${userId}`);
     }
-
     return user;
   }
 }

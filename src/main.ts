@@ -20,10 +20,11 @@ async function bootstrap() {
       {
         type: 'http',
         scheme: 'bearer',
-        name: 'JWT',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
         in: 'header',
       },
-      'access-token',
+      'access_token',
     )
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
