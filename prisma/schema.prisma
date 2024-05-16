@@ -29,6 +29,7 @@ model User {
   email    String? @unique
   nickname String?
   password String?
+  description  String? @db.LongText
 }
 
 model Movie {

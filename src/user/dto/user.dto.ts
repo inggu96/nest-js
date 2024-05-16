@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UserDTO {
   @ApiProperty({
@@ -37,5 +38,44 @@ export class UserDTO {
     example: '인국',
     description: '사용자 닉네임',
   })
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+    example: '인국',
+    description: '사용자의 닉네임',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
   nickname: string;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+    example: 'dlsrnr55',
+    description: '사용자 설명',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  description: string;
+}
+
+export class UpdateUserDto {
+  @ApiProperty({
+    description: 'User nickname',
+    example: 'nickname',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  nickname?: string;
+
+  @ApiProperty({
+    description: 'User description',
+    example: 'This is a description',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  description?: string;
 }

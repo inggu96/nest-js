@@ -1,7 +1,7 @@
 import { PrismaService } from '@/database/prisma.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { UserDTO } from './dto/user.dto';
+import { UpdateUserDto, UserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -22,5 +22,15 @@ export class UserService {
       throw new Error(`No user found with ID ${userId}`);
     }
     return user;
+  }
+  async updateUserInfo(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDTO> {
+    const { nickname, description } = updateUserDto;
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { nickname, description },
+    });
   }
 }
