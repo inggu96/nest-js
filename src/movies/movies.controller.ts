@@ -26,10 +26,19 @@ export class MoviesController {
   getMoviesByGenre(@Query('genreIds') genreIds: string) {
     return this.moviesService.fetchMoviesByGenre(genreIds);
   }
-  @Get(':id')
-  async getMovie(@Param('id') id: string) {
-    return await this.moviesService.findMovie(id);
+
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Get('me/likes')
+  @ApiOperation({
+    summary: '찜한 영화 조회',
+    description: '사용자가 찜한 영화를 조회합니다.',
+  })
+  async getLikedMovies(@Request() req) {
+    const userId = req.user.id;
+    return await this.moviesService.getLikedMovies(userId);
   }
+
   @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard)
   @Post(':id/like')
@@ -50,5 +59,9 @@ export class MoviesController {
     const userId = req.user.id;
     const movieId = parseInt(id, 10);
     return await this.moviesService.unlikeMovie(userId, movieId);
+  }
+  @Get(':id')
+  async getMovie(@Param('id') id: string) {
+    return await this.moviesService.findMovie(id);
   }
 }

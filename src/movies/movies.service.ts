@@ -41,6 +41,19 @@ export class MoviesService {
 
     return movie;
   }
+  async getLikedMovies(userId: number) {
+    return this.prisma.movie.findMany({
+      include: movieIncludeOption,
+      where: {
+        movieLikes: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+  }
+
   async likeMovie(userId: number, movieId: number) {
     return this.prisma.movieLike.create({
       data: {
