@@ -32,6 +32,7 @@ model User {
   description  String? @db.LongText
   movieLikes MovieLike[]
   movieBookmarks MovieBookmark[]
+  reviewComment ReviewComment[]
 
 }
 
@@ -60,6 +61,7 @@ model Movie {
   movieProductionCompanies MovieProductionCompanies[]
   movieLikes MovieLike[]
   movieBookmarks MovieBookmark[]
+  reviewComment ReviewComment[]
 
   @@map("movies")
 }
@@ -149,4 +151,15 @@ model MovieBookmark{
   movieId Int
 
   @@unique([userId,movieId])
+}
+
+model ReviewComment{
+  id     Int    @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  movie Movie @relation(fields: [movieId], references: [id])
+  movieId Int
+  content String
+
+ @@unique([userId,movieId])
 }

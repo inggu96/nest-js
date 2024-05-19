@@ -1,5 +1,6 @@
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -25,6 +26,41 @@ export class MoviesController {
   @Get('genre')
   getMoviesByGenre(@Query('genreIds') genreIds: string) {
     return this.moviesService.fetchMoviesByGenre(genreIds);
+  }
+
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Get('bookmarks')
+  @ApiOperation({
+    summary: '북마크한 영화 조회',
+    description: '사용자가 북마크한 영화를 조회합니다.',
+  })
+  async getBookmarkedMovies(@Request() req) {
+    const userId = req.user.id;
+    return await this.moviesService.getBookmarkedMovies(userId);
+  }
+
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/bookmarks')
+  @ApiOperation({ summary: '북마크 추가', description: '영화를 북마크합니다.' })
+  async bookmarkMovie(@Request() req, @Param('id') id: string) {
+    const userId = req.user.id;
+    const movieId = parseInt(id, 10);
+    return await this.moviesService.bookmarkMovie(userId, movieId);
+  }
+
+  @ApiBearerAuth('access_token')
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id/bookmarks')
+  @ApiOperation({
+    summary: '북마크 제거',
+    description: '영화 북마크를 취소합니다.',
+  })
+  async unbookmarkMovie(@Request() req, @Param('id') id: string) {
+    const userId = req.user.id;
+    const movieId = parseInt(id, 10);
+    return await this.moviesService.unbookmarkMovie(userId, movieId);
   }
 
   @ApiBearerAuth('access_token')

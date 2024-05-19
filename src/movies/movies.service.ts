@@ -41,6 +41,47 @@ export class MoviesService {
 
     return movie;
   }
+
+  async bookmarkMovie(userId: number, movieId: number) {
+    return this.prisma.movieBookmark.create({
+      data: {
+        userId,
+        movieId,
+      },
+    });
+  }
+
+  async unbookmarkMovie(userId: number, movieId: number) {
+    const movieBookmark = await this.prisma.movieBookmark.findUnique({
+      where: {
+        userId_movieId: { userId, movieId },
+      },
+    });
+
+    if (!movieBookmark) {
+      throw new NotFoundException('Bookmark not found');
+    }
+
+    return this.prisma.movieBookmark.delete({
+      where: {
+        id: movieBookmark.id,
+      },
+    });
+  }
+
+  async getBookmarkedMovies(userId: number) {
+    return this.prisma.movie.findMany({
+      include: movieIncludeOption,
+      where: {
+        movieBookmarks: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+  }
+
   async getLikedMovies(userId: number) {
     return this.prisma.movie.findMany({
       include: movieIncludeOption,
