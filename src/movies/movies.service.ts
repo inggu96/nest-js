@@ -41,4 +41,30 @@ export class MoviesService {
 
     return movie;
   }
+  async likeMovie(userId: number, movieId: number) {
+    return this.prisma.movieLike.create({
+      data: {
+        userId,
+        movieId,
+      },
+    });
+  }
+
+  async unlikeMovie(userId: number, movieId: number) {
+    const movieLike = await this.prisma.movieLike.findUnique({
+      where: {
+        userId_movieId: { userId, movieId },
+      },
+    });
+
+    if (!movieLike) {
+      throw new NotFoundException('Like not found');
+    }
+
+    return this.prisma.movieLike.delete({
+      where: {
+        id: movieLike.id,
+      },
+    });
+  }
 }
